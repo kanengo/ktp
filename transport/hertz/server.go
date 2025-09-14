@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	kttransport "github.com/go-kratos/kratos/v2/transport"
 	"github.com/kanengo/ktp/transport"
@@ -18,12 +19,17 @@ type Server struct {
 	addr            string
 	exitWaitTimeout time.Duration
 	endpoint        *url.URL
+
+	ResponseEncoder func(ctx context.Context, c *app.RequestContext, res any)
+	ErrorEncoder    func(ctx context.Context, c *app.RequestContext, err error)
 }
 
 func NewServer(opts ...ServerOption) *Server {
 	srv := &Server{
 		addr:            ":8888",
 		exitWaitTimeout: 5 * time.Second,
+		ResponseEncoder: DedaultResponseEncoder,
+		ErrorEncoder:    DedaultErrorEncoder,
 	}
 	for _, opt := range opts {
 		opt(srv)
@@ -42,6 +48,7 @@ func (s *Server) init(opts ...ServerOption) {
 		server.WithHostPorts(s.addr),
 		server.WithExitWaitTime(s.exitWaitTimeout),
 	)
+
 }
 
 func (s *Server) listenAndEndpoint() error {

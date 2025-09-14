@@ -3,6 +3,7 @@ package transport
 import (
 	"fmt"
 	"net"
+	"strings"
 )
 
 func GetLocalIP() (string, error) {
@@ -61,4 +62,19 @@ func isValidBindableIPv4(ip net.IP) bool {
 	}
 
 	return true
+}
+
+func ContentSubtype(contentType string) string {
+	left := strings.Index(contentType, "/")
+	if left == -1 {
+		return ""
+	}
+	right := strings.Index(contentType, ";")
+	if right == -1 {
+		right = len(contentType)
+	}
+	if right < left {
+		return ""
+	}
+	return contentType[left+1 : right]
 }
