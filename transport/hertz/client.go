@@ -58,6 +58,9 @@ func (c *Client) RequestEncoder(ctx context.Context, req *protocol.Request, in a
 	case proto.Message:
 		body, err = proto.Marshal(v)
 		ct = "application/x-protobuf;charset=utf-8"
+	case string:
+		body = []byte(v)
+		ct = "text/plain;charset=utf-8"
 	default:
 		body, err = sonic.Marshal(in)
 	}
@@ -78,6 +81,8 @@ func (c *Client) ResponseDecoder(ctx context.Context, res *protocol.Response, ou
 	switch name {
 	case "x-protobuf":
 		err = proto.Unmarshal(res.Body(), out.(proto.Message))
+	case "plain":
+		*(out.(*string)) = string(res.Body())
 	default:
 		err = sonic.Unmarshal(res.Body(), out)
 	}

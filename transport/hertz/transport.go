@@ -55,6 +55,8 @@ func DedaultResponseEncoder(ctx context.Context, c *app.RequestContext, res any)
 	switch v := res.(type) {
 	case proto.Message:
 		c.ProtoBuf(consts.StatusOK, v)
+	case string:
+		c.String(consts.StatusOK, v)
 	default:
 		c.JSON(consts.StatusOK, res)
 	}

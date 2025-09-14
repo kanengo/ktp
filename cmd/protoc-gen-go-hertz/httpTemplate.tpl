@@ -46,7 +46,7 @@ func _{{$svrType}}_{{.Name}}{{.Num}}_Hertz_Handler(s *hertz.Server, srv {{$svrTy
 			s.ErrorEncoder(ctx, c, err)
 			return
 		}
-		s.ResponseEncoder(ctx, c, resp)
+		s.ResponseEncoder(ctx, c, resp{{.ResponseBody}})
 		return
 	}
 
@@ -80,7 +80,7 @@ func (c *{{$svrType}}HertzClientImpl) {{.Name}}(ctx context.Context, in *{{.Requ
 	uri := c.host + "{{.Path}}"
 	var out {{.Reply}}
 
-	err := c.cc.Do(ctx, uri, "{{.Method}}", in, &out, opts...)
+	err := c.cc.Do(ctx, uri, "{{.Method}}", in, &out{{.ResponseBody}}, opts...)
 	if err != nil {
 		return nil, err
 	}
