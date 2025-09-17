@@ -8,7 +8,6 @@ import (
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/transport"
-	"google.golang.org/protobuf/proto"
 )
 
 const (
@@ -46,15 +45,15 @@ func (tr *Transport) RequestHeader() transport.Header {
 
 var _ transport.Transporter = (*Transport)(nil)
 
-func DedaultResponseEncoder(ctx context.Context, c *app.RequestContext, res any) {
+func DedaultServerResponseEncoder(ctx context.Context, c *app.RequestContext, res any) {
 	// data, err := sonic.MarshalString(res)
 	// if err != nil {
 	// 	c.String(consts.StatusInternalServerError, err.Error())
 	// 	return
 	// }
 	switch v := res.(type) {
-	case proto.Message:
-		c.ProtoBuf(consts.StatusOK, v)
+	// case proto.Message:
+	// 	c.ProtoBuf(consts.StatusOK, v)
 	case string:
 		c.String(consts.StatusOK, v)
 	default:

@@ -28,7 +28,7 @@ func NewServer(opts ...ServerOption) *Server {
 	srv := &Server{
 		addr:            ":8888",
 		exitWaitTimeout: 5 * time.Second,
-		ResponseEncoder: DedaultResponseEncoder,
+		ResponseEncoder: DedaultServerResponseEncoder,
 		ErrorEncoder:    DedaultErrorEncoder,
 	}
 	for _, opt := range opts {
